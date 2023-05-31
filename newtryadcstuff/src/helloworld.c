@@ -99,7 +99,7 @@ int* a_timeDelta = NULL; */
 /****************************************************************************/
 /**************************        MAIN         *****************************/
 /****************************************************************************/
-//test
+
 
 //todo: change hardware arch to send interrupts to pynq, in order to implement an interrupt handler and locs.
 //todo: add LED that turns on when a peak is detected.
