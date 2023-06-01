@@ -63,7 +63,7 @@
 
 #define XADC_DEVICE_ID 			XPAR_XADCPS_0_DEVICE_ID
 //#define XTIME_GLOBAL_REGISTER
-const int avgAmount = 1;
+const int avgAmount = 3;
 /************************** Function-specific ****************************/
 /**************************** Enum Definitions ******************************/
 
@@ -101,9 +101,7 @@ int* a_timeDelta = NULL; */
 /****************************************************************************/
 
 
-//todo: change hardware arch to send interrupts to pynq, in order to implement an interrupt handler and locs.
-//todo: add LED that turns on when a peak is detected.
-//todo:
+//todo: INVESTIGATE WHY TF TIME DELTA IS INCREMENTING
 
 int main()
 {
@@ -118,8 +116,8 @@ int main()
     	return XST_FAILURE;
     }
 
-    SetPeakThreshold(3);
-    int averagedTimeDifference = 0;
+    SetPeakThreshold(3000);
+    //u64 averagedTimeDifference = 0;
 
 	while(1)
 	{
@@ -128,7 +126,11 @@ int main()
 		float data =  XAdcGetValues();
 		printf("%0d.%03d Volts.\n\r", (int)(data), XAdcFractionToInt(data));
 
-		averagedTimeDifference = PeakDetection(data, avgAmount);
+		unsigned long averagedTimeDifference = PeakDetection(data, avgAmount);
+		printf("averaged time difference: %llu\n\r", averagedTimeDifference);
+
+		int BPM = GetBPM(averagedTimeDifference);
+		printf("BPM: %d\n\r", BPM);
 
 		// apply filters
 		// add piek detection

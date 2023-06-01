@@ -1,0 +1,34 @@
+2023-06-02T00:05:02.878183400255-00:05:02 **** Build of project design_1_wrapper ****
+000-buildplatform.bat 49974 design_1_wrapper  
+000-XSDB Server Channel: tcfchan#2
+000-Reading the platform  : "design_1_wrapper"
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-Reading the platform  : "design_1_wrapper"
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-ERROR: [Hsi 55-1592] Current Software Design is not set
+000-No Platform exists with name:  design_1_wrapper
+000-    invoked from within
+000-"::tcf::eval -progress {apply {{msg} {puts $msg}}} {tcf_send_command tcfchan#0 xsdb eval s es {{platform active design_1_wrapper; platform generate }}}"
+000-    (procedure "::tcf::send_command" line 4)
+000-    invoked from within
+000-"tcf send_command $::xsdb::curchan xsdb eval s es [list "platform active $PLATFORM_NAME; platform generate $target"]"
+000-    invoked from within
+000-"if { $iswindows == 1 } {    
+000-
+000-    set XSDB_PORT [lindex $argv 0]
+000-    set PLATFORM_NAME [lindex $argv 1]
+000-    set arglen [llength $argv]
+000-    set lastind..."
+000-    (file "C:/Xilinx/Vitis/2022.2\scripts\vitis\util\buildplatform.tcl" line 11)
+00255-
+00:05:08 Build Finished (took 5s.967ms)
+
