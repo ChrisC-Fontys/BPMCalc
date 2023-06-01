@@ -143,3 +143,4 @@ int main()
 
 
 //todo: create interrupt service routie that saves the data in variable every time adc triggers an interrupt.
+//todo: git version control
