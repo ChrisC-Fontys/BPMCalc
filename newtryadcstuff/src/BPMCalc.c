@@ -129,6 +129,8 @@ int PeakDetection(int p_data, int p_avgAmount)
 	//if I feel like doing it, make sure variables used here can only be seen by this functiom
 
 	//memory leak check prevention start
+
+	//CreateArray(p_avgAmount
 	if (a_timeDelta == NULL) {
 		//allocate memory nessecary for avgAmount of ints (basically a dynamic array)
 		/* int* */ a_timeDelta = (unsigned long*)malloc(p_avgAmount * sizeof(unsigned long));
@@ -249,11 +251,11 @@ void MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount)
 		triggeredState = WAIT;
 		counter = 0;
 
-		free(a_timeDelta);
+		free(p_avgArray);
 		printf("memory deallocated");
-		a_timeDelta = NULL; //memory leak prevention check over
-		avgTimeDelta = sigmaTimeDelta/p_avgAmount;
-		sigmaTimeDelta = 0;
+		p_avgArray = NULL; //memory leak prevention check over
+		//avgTimeDelta = sigmaTimeDelta/p_avgAmount;
+		//sigmaTimeDelta = 0;
 	}//end ifelse
 
 }
