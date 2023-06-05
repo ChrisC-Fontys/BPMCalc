@@ -101,7 +101,7 @@ int* a_timeDelta = NULL; */
 /****************************************************************************/
 
 
-//todo: INVESTIGATE WHY TF TIME DELTA IS INCREMENTING
+//todo: fix bpm clculation bug
 
 int main()
 {
@@ -129,7 +129,7 @@ int main()
 		unsigned long averagedTimeDifference = PeakDetection(data, avgAmount);
 		printf("averaged time difference: %llu\n\r", averagedTimeDifference);
 
-		int BPM = GetBPM(averagedTimeDifference);
+		double BPM = GetBPM(averagedTimeDifference);
 		printf("BPM: %d\n\r", BPM);
 
 		// apply filters
@@ -143,4 +143,4 @@ int main()
 
 
 //todo: create interrupt service routie that saves the data in variable every time adc triggers an interrupt.
-//todo: git version control
+//todo: git version control - finished

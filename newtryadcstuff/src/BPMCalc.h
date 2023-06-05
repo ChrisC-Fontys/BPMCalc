@@ -22,8 +22,18 @@
 #include "sleep.h"
 #include "ADCcode.h"
 #include "xtime_l.h"
+/***************************** TYPEFDEFS ***********************************/
+typedef enum States
+{
+	WAIT,
+	TRIG,
+	WAIT2,
+	DELTA,
+	AVG
+}States;
 
-
+/***************************** CONSTANTS ***********************************/
+#define MINUTE 60
 /************************** Function Prototypes ****************************/
 
 void SetPeakThreshold(int p_threshold);

@@ -15,23 +15,14 @@
 #include "sleep.h"
 #include "ADCcode.h"
 #include "xtime_l.h"
+#include "BPMCalc.h"
 
 #define printf xil_printf /* Small foot-print printf function */
-/**************************** Enum Definitions ******************************/
 
-typedef enum States
-{
-	WAIT,
-	TRIG,
-	WAIT2,
-	DELTA,
-	AVG
-}States;
 
 /************************** Variable Definitions ****************************/
 XTime peakTime1, peakTime2 = 0;
 unsigned long timeDelta = 0;
-//short triggeredState = 0;
 States triggeredState = WAIT;
 int peakThreshold = 1000;
 int counter = 0;
@@ -46,8 +37,7 @@ unsigned long* a_timeDelta = NULL;
 /****************************************************************************/
 
 
-//todo: deccompose AVG state into functions that are easier to conseptualise.
-//todo:
+//todo: deccompose AVG state into functions that are easier to conceptualise.
 //setter functions
 
 
@@ -63,15 +53,15 @@ void SetPeakThreshold(int p_threshold)
 
 float GetFrequency(unsigned long p_timeDelta)
 {
-
-	float f_frequency = 1/(p_timeDelta*COUNTS_PER_SECOND); //make sure to account for time base of zynq proc, this is not in seconds but most likely ns)
-
+	float f_timeSeconds = p_timeDelta/(float)COUNTS_PER_SECOND;
+	float f_frequency = 1.0/f_timeSeconds; //make sure to account for time base of zynq proc, this is not in seconds but most likely ns)
+	printf("frequency: %f\n\r", f_frequency);
 	return f_frequency;
 }
 
 double GetBPM(unsigned long p_timeDelta)
 {
-	double f_BPM = GetFrequency(p_timeDelta) * 60;//truncation is happening but not that big of a deal
+	double f_BPM = GetFrequency(p_timeDelta) * MINUTE;//truncation is happening but not that big of a deal
 
 	return f_BPM;
 }
@@ -192,7 +182,7 @@ int PeakDetection(int p_data, int p_avgAmount)
 } //end func
 
 
-unsigned long MeasurementAveraging(unsigned long * p_avgArray, int p_avgAmount)
+unsigned long MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount)
 {
 	u64 f_avgTimeDelta = 0;
 
