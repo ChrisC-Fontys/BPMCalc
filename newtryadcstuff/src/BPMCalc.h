@@ -37,10 +37,9 @@ typedef enum States
 /************************** Function Prototypes ****************************/
 
 void SetPeakThreshold(int p_threshold);
-void AutosetPeakThreshold(int p_data, float p_percentage);
+void AutosetPeakThreshold(float p_percentage, int p_secondsActive);
 int PeakDetection(int p_data, int p_avgAmount);
 void MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount);
 
-
 float GetFrequency(unsigned long p_timeDelta);
-double GetBPM(unsigned long p_timeDelta);
+int GetBPM(unsigned long p_timeDelta);
