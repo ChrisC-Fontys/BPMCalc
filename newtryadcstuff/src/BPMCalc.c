@@ -37,10 +37,47 @@ unsigned long* a_timeDelta = NULL;
 /****************************************************************************/
 
 
-//todo: deccompose AVG state into functions that are easier to conceptualise.
-//setter functions
+/*
+ * determines threshold value based on peaks of an incoming signal.
+ *
+ * @param
+ * p_percentage: set percentage of peak, in float.
+ * p_secondsActive: set how long the function checksfor peaks in whole seconds.
+ *
+ * @return
+ * void
+ */
+void AutosetPeakThreshold(float p_percentage, int p_secondsActive)
+{
+	int f_maxPeak = 0;
+	XTime f_begin, f_end = 0;
+	unsigned long long f_elapsedTime = 0;
+	unsigned long long f_runtime = p_secondsActive/COUNTS_PER_SECOND;
+	int f_data = 0;
 
+	XTime_GetTime(&f_begin);
+	while (f_elapsedTime <= f_runtime)
+	{
+		f_data = XAdcGetValues();
+		if (f_data > f_maxPeak) {
+			f_maxPeak = f_data;
+		}
+		XTime_GetTime(&f_end);
+		f_elapsedTime = f_end - f_begin;
 
+	}
+	SetPeakThreshold(f_maxPeak*p_percentage);
+}
+
+/*
+ * sets peak threshold of peak detection system
+ *
+ * @param
+ * p_threshold: threshold for the peak.
+ *
+ * @return
+ * void
+ */
 void SetPeakThreshold(int p_threshold)
 {
 	//while loop that compares prev measurement to current emasurement and see if it is going down
@@ -49,8 +86,14 @@ void SetPeakThreshold(int p_threshold)
 	printf("Threshold: %d\n\r",peakThreshold);
 }
 
-//calculation funcitons
-
+/*
+ * calculates frequency based on time difference.
+ * @param
+ * p_timeDelta: integer value for time difference in ticks, not in seconds.
+ *
+ * @return
+ * (float)frequency calculated based on ticks.
+ */
 float GetFrequency(unsigned long p_timeDelta)
 {
 	float f_timeSeconds = p_timeDelta/(float)COUNTS_PER_SECOND;
@@ -58,10 +101,18 @@ float GetFrequency(unsigned long p_timeDelta)
 	printf("frequency: %f\n\r", f_frequency);
 	return f_frequency;
 }
-
-double GetBPM(unsigned long p_timeDelta)
+/*
+ * calculates estimated BPM based on time difference.
+ *
+ * @param
+ * p_timeDelta: integer value for time difference in ticks, not in seconds.
+ *
+ * @return
+ * (double)BPM.
+ */
+int GetBPM(unsigned long p_timeDelta)
 {
-	double f_BPM = GetFrequency(p_timeDelta) * MINUTE;//truncation is happening but not that big of a deal
+	int f_BPM = GetFrequency(p_timeDelta) * MINUTE;//truncation is happening but not that big of a deal
 
 	return f_BPM;
 }
@@ -85,127 +136,95 @@ double GetBPM(unsigned long p_timeDelta)
  */
 int PeakDetection(int p_data, int p_avgAmount)
 {
-	int data = 0; //magic shit
-	data = p_data;
-	int avgAmount = p_avgAmount;
+	int f_data = 0;
+	f_data = p_data;
 
-	//memory leak check prevention start
+	//allocate memory
 	if (a_timeDelta == NULL) {
-		//allocate memory nessecary for avgAmount of ints (basically a dynamic array)
-		/* int* */ a_timeDelta = (unsigned long*)malloc(avgAmount * sizeof(unsigned long));
-		//memory allocated?
+		a_timeDelta = (unsigned long*)malloc(p_avgAmount * sizeof(unsigned long));
 		if (a_timeDelta == NULL) {
 			printf("Memory not allocated.\n");
 		}
 		else {
 			printf("Memory successfully allocated\n");
-				//hasRun = 1;
-		}//end if
-	}//end if
+		}
+	}
 
-    //state machine for calculating BPM
-			switch (triggeredState)
-			{
-			case WAIT:
-				if (data >= peakThreshold) {
-					XTime_GetTime(&peakTime1);
-					triggeredState = TRIG;
+	//state machine
+	switch (triggeredState)
+	{
+	case WAIT:
+		if (f_data >= peakThreshold) {
+			XTime_GetTime(&peakTime1);
+			triggeredState = TRIG;
+		}
+		break;
 
-				} //end if
-				break;
+	case TRIG:
+		if (f_data < peakThreshold) {
+			triggeredState = WAIT2;
+		}
+		break;
 
-			case TRIG:
-				if (data < peakThreshold) {
-					triggeredState = WAIT2;
+	case WAIT2:
+		if (f_data >= peakThreshold) {
+			XTime_GetTime(&peakTime2);
+			triggeredState = DELTA;
+		}
+		break;
+	case DELTA:
 
-				} //end if
-				break;
+		if (f_data < peakThreshold) {
+			timeDelta = peakTime2-peakTime1;
+			triggeredState = AVG;
+		}
 
-			case WAIT2:
-				if (data >= peakThreshold) {
-					XTime_GetTime(&peakTime2);
-					triggeredState = DELTA;
+		break;
 
-				} //end if
-				break;
+	case AVG:
+		MeasurementAveraging(a_timeDelta, p_avgAmount);
+		break;
 
-			case DELTA:
+	default:
+		triggeredState = WAIT;
+	}
 
-				if (data < peakThreshold) {
-					timeDelta = peakTime2-peakTime1;
+	return avgTimeDelta;
+}
 
-					triggeredState = AVG;
-				}
-
-				break;
-
-			case AVG:
-
-				//save timeDelta into position of array
-				//int counter = 0;
-
-				//if the amount of times the function has looped is less than avgAMount, loop and increase counter
-				if (counter < avgAmount) {
-					triggeredState = WAIT;
-					a_timeDelta[counter] = timeDelta;
-					counter++;
-					break;
-				}
-				//else, calculate average, set counter to 0 and reset state
-				else {
-
-					//function: AverageMeasurement();
-					for (int i = 0; i < avgAmount; i++) {
-						sigmaTimeDelta += a_timeDelta[i];
-					} //end for
-					triggeredState = WAIT;
-					counter = 0;
-
-					free(a_timeDelta);
-					printf("memory deallocated");
-					a_timeDelta = NULL; //memory leak prevention check over
-					avgTimeDelta = sigmaTimeDelta/avgAmount;
-					sigmaTimeDelta = 0;
-				}//end ifelse
-
-			default:
-				triggeredState = WAIT;
-				//break;
-
-			} //end case
-
-			//debugging prints
-			/*printf("State: %d\n\r", triggeredState);
-			printf("loop counter: %d\n\r", counter);
-			printf("time delta: %llu\n\r", timeDelta);*/
-			return avgTimeDelta;
-} //end func
-
-
-unsigned long MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount)
+/*
+ * average some measurement array with flexibility for the degreee of averaging.\
+ *
+ * @param
+ * p_avgArray: pointer to dynamic array
+ * p_avgAmount: averaging degree
+ *
+ * @return
+ * void
+ */
+void MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount)
 {
-	u64 f_avgTimeDelta = 0;
-
 	if (counter < p_avgAmount) {
 		p_avgArray[counter] = timeDelta;
 		triggeredState = WAIT;
 		counter++;
-
+		return;
 	}
-		//else, calculate average, set counter to 0 and reset state
-	else {
 
-		//function: AverageMeasurement();
+	else {
 		for (int i = 0; i < p_avgAmount; i++) {
 			sigmaTimeDelta += p_avgArray[i];
-		} //end for
-
-
-		f_avgTimeDelta = sigmaTimeDelta/p_avgAmount;
+		}
+		avgTimeDelta = sigmaTimeDelta/p_avgAmount;
 		sigmaTimeDelta = 0;
 		triggeredState = WAIT;
 		counter = 0;
-	}//end ifelse
+
+		free(p_avgArray);
+		printf("memory deallocated");
+		p_avgArray = NULL;
+
+	}
 
 
 	return f_avgTimeDelta;

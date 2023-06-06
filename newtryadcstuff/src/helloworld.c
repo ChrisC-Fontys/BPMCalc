@@ -62,46 +62,14 @@
 /************************** Constant Definitions ****************************/
 
 #define XADC_DEVICE_ID 			XPAR_XADCPS_0_DEVICE_ID
-//#define XTIME_GLOBAL_REGISTER
 const int avgAmount = 3;
-/************************** Function-specific ****************************/
-/**************************** Enum Definitions ******************************/
-
-/*typedef enum States
-{
-	WAIT,
-	TRIG,
-	WAIT2,
-	DELTA,
-	AVG
-}States;*/
-
-/************************** Variable Definitions ****************************/
-/*XTime peakTime1, peakTime2;
-u64 timeDelta = 0;
-//short triggeredState = 0;
-States triggeredState = WAIT;
-int peakThreshold = 1000;
-int counter = 0;
-
-int sigmaTimeDelta = 0;
-int avgTimeDelta = 0;
-
-//memory leak prevention
-int* a_timeDelta = NULL; */
-
-
 /***************** Macros (Inline Functions) Definitions ********************/
 
 #define printf xil_printf /* Small foot-print printf function */
 
-/************************** Function Prototypes *****************************/
 /****************************************************************************/
 /**************************        MAIN         *****************************/
 /****************************************************************************/
-
-
-//todo: fix bpm clculation bug
 
 int main()
 {
@@ -116,31 +84,22 @@ int main()
     	return XST_FAILURE;
     }
 
-    SetPeakThreshold(3000);
-    //u64 averagedTimeDifference = 0;
+    AutosetPeakThreshold(0.8, 10);
 
 	while(1)
 	{
-		//note: by sleeping the program for a specifiedd amount of time, we can vary the sample rate. possible disadvantage is incosistent sampling times.
-		//therefore, we might want to use interrupts in order to make sure the sample rate stays consistent. (interrupts are used lol)
-		float data =  XAdcGetValues();
-		printf("%0d.%03d Volts.\n\r", (int)(data), XAdcFractionToInt(data));
+		int data =  XAdcGetValues();
+		printf("rawData = %d\n\r", data);
 
 		unsigned long averagedTimeDifference = PeakDetection(data, avgAmount);
 		printf("averaged time difference: %llu\n\r", averagedTimeDifference);
 
-		double BPM = GetBPM(averagedTimeDifference);
+		int BPM = GetBPM(averagedTimeDifference);
 		printf("BPM: %d\n\r", BPM);
 
-		// apply filters
-		// add piek detection
-	} //end while
+	}
 
     printf("Program finished \n\r");
     cleanup_platform();
     return XST_SUCCESS;
-} //end main
-
-
-//todo: create interrupt service routie that saves the data in variable every time adc triggers an interrupt.
-//todo: git version control - finished
+}
