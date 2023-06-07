@@ -16,16 +16,16 @@
 #include "ADCcode.h"
 #include "xtime_l.h"
 #include "BPMCalc.h"
-
-#define printf xil_printf /* Small foot-print printf function */
+//#define printf xil_printf /* Small foot-print printf function */
 
 
 /************************** Variable Definitions ****************************/
-XTime peakTime1, peakTime2 = 0;
-unsigned long timeDelta = 0;
-States triggeredState = WAIT;
-int peakThreshold = 1000;
-int counter = 0;
+static XTime peakTime1, peakTime2 = 0;
+static unsigned long timeDelta = 0;
+static States triggeredState = WAIT;
+static int peakThreshold = 1000;
+static int counter = 0;
+static int averagedFinished = FALSE;
 
 u64 sigmaTimeDelta = 0;
 u64 avgTimeDelta = 0;
@@ -141,7 +141,7 @@ int PeakDetection(int p_data, int p_avgAmount)
 
 	//allocate memory
 	if (a_timeDelta == NULL) {
-		a_timeDelta = (unsigned long*)malloc(p_avgAmount * sizeof(unsigned long));
+		a_timeDelta = (unsigned long*)calloc(p_avgAmount, sizeof(unsigned long));
 		if (a_timeDelta == NULL) {
 			printf("Memory not allocated.\n");
 		}
@@ -183,6 +183,12 @@ int PeakDetection(int p_data, int p_avgAmount)
 
 	case AVG:
 		MeasurementAveraging(a_timeDelta, p_avgAmount);
+		if (averagedFinished == TRUE) {
+			free(a_timeDelta);
+			printf("memory deallocated");
+			a_timeDelta = NULL;
+			averagedFinished = FALSE;
+		}
 		break;
 
 	default:
@@ -220,9 +226,8 @@ void MeasurementAveraging(unsigned long *p_avgArray, int p_avgAmount)
 		triggeredState = WAIT;
 		counter = 0;
 
-		free(p_avgArray);
-		printf("memory deallocated");
-		p_avgArray = NULL;
+		averagedFinished = TRUE;
+
 
 	}
 

@@ -62,7 +62,7 @@
 /************************** Constant Definitions ****************************/
 
 #define XADC_DEVICE_ID 			XPAR_XADCPS_0_DEVICE_ID
-const int avgAmount = 3;
+
 /***************** Macros (Inline Functions) Definitions ********************/
 
 #define printf xil_printf /* Small foot-print printf function */
@@ -77,6 +77,7 @@ int main()
     printf("Starting program...\n\r");
 
     int Status;
+    const int avgAmount = 2;
 
     Status = XAdcConfig(XADC_DEVICE_ID);
     if (Status != XST_SUCCESS) {
@@ -84,7 +85,8 @@ int main()
     	return XST_FAILURE;
     }
 
-    AutosetPeakThreshold(0.8, 10);
+    //AutosetPeakThreshold(0.8, 10);
+    SetPeakThreshold(3000);
 
 	while(1)
 	{
