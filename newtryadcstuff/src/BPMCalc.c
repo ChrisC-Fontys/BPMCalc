@@ -47,7 +47,7 @@ unsigned long* a_timeDelta = NULL;
  * @return
  * void
  */
-void AutosetPeakThreshold(float p_percentage, int p_secondsActive)
+void AutosetPeakThreshold(int p_percentage, int p_secondsActive)
 {
 	int f_maxPeak = 0;
 	XTime f_begin, f_end = 0;
@@ -66,7 +66,7 @@ void AutosetPeakThreshold(float p_percentage, int p_secondsActive)
 		f_elapsedTime = f_end - f_begin;
 
 	}
-	SetPeakThreshold(f_maxPeak*p_percentage);
+	SetPeakThreshold(f_maxPeak*((float)100.0/p_percentage));
 }
 
 /*
@@ -98,7 +98,7 @@ float GetFrequency(unsigned long p_timeDelta)
 {
 	float f_timeSeconds = p_timeDelta/(float)COUNTS_PER_SECOND;
 	float f_frequency = 1.0/f_timeSeconds; //make sure to account for time base of zynq proc, this is not in seconds but most likely ns)
-	printf("frequency: %f\n\r", f_frequency);
+	//printf("frequency: %f\n\r", f_frequency);
 	return f_frequency;
 }
 /*
