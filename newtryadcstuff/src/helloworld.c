@@ -63,9 +63,11 @@
 
 #define XADC_DEVICE_ID 			XPAR_XADCPS_0_DEVICE_ID
 
+int lastBPM = 0;
+
 /***************** Macros (Inline Functions) Definitions ********************/
 
-#define printf xil_printf /* Small foot-print printf function */
+//#define printf xil_printf /* Small foot-print printf function */
 
 /****************************************************************************/
 /**************************        MAIN         *****************************/
@@ -94,10 +96,16 @@ int main()
 		printf("rawData = %d\n\r", data);
 
 		unsigned long averagedTimeDifference = PeakDetection(data, avgAmount);
-		printf("averaged time difference: %llu\n\r", averagedTimeDifference);
+		printf("averaged time difference: %lu\n\r", averagedTimeDifference);
+
 
 		int BPM = GetBPM(averagedTimeDifference);
-		printf("BPM: %d\n\r", BPM);
+
+		if (lastBPM != BPM) {
+			printf("BPM: %d\n\r", BPM);
+			lastBPM = BPM;
+		}
+
 
 	}
 

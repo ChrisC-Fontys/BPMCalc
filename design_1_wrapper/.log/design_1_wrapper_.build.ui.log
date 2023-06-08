@@ -1,6 +1,6 @@
-2023-06-07T15:35:06.95372300255-15:35:06 **** Build of project design_1_wrapper ****
-000-buildplatform.bat 55023 design_1_wrapper  
-000-XSDB Server Channel: tcfchan#21
+2023-06-08T10:36:23.415084800255-10:36:23 **** Build of project design_1_wrapper ****
+000-buildplatform.bat 49787 design_1_wrapper  
+000-XSDB Server Channel: tcfchan#3
 000-Reading the platform  : "design_1_wrapper"
 000-ERROR: [Hsi 55-1592] Current Software Design is not set
 000-ERROR: [Hsi 55-1592] Current Software Design is not set
@@ -30,5 +30,5 @@
 000-    set lastind..."
 000-    (file "C:/Xilinx/Vitis/2022.2\scripts\vitis\util\buildplatform.tcl" line 11)
 00255-
-15:35:14 Build Finished (took 7s.343ms)
+10:36:28 Build Finished (took 4s.670ms)
 
