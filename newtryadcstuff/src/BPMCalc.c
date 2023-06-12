@@ -97,8 +97,11 @@ void SetPeakThreshold(int p_threshold)
 float GetFrequency(unsigned long p_timeDelta)
 {
 	float f_timeSeconds = p_timeDelta/(float)COUNTS_PER_SECOND;
+	if (f_timeSeconds == 0) return f_frequency = 0; //divide by 0 checker
+	else {
 	float f_frequency = 1.0/f_timeSeconds; //make sure to account for time base of zynq proc, this is not in seconds but most likely ns)
 	//printf("frequency: %f\n\r", f_frequency);
+	}
 	return f_frequency;
 }
 /*
