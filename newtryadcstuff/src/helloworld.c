@@ -93,18 +93,18 @@ int main()
 	while(1)
 	{
 		int data =  XAdcGetValues();
-		printf("rawData = %d\n\r", data);
+		//printf("rawData = %d\n\r", data);
 
 		unsigned long averagedTimeDifference = PeakDetection(data, avgAmount);
-		printf("averaged time difference: %lu\n\r", averagedTimeDifference);
+		//printf("averaged time difference: %lu\n\r", averagedTimeDifference);
 
 
 		int BPM = GetBPM(averagedTimeDifference);
 
-		if (lastBPM != BPM) {
+		//if (lastBPM != BPM) {
 			printf("BPM: %d\n\r", BPM);
 			lastBPM = BPM;
-		}
+		//}
 
 
 	}

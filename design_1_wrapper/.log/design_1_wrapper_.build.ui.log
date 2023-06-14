@@ -1,18 +1,6 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-2023-06-05T10:22:32.138718100255-10:22:32 **** Build of project design_1_wrapper ****
-000-buildplatform.bat 49808 design_1_wrapper  
-000-XSDB Server Channel: tcfchan#28
-=======
-2023-06-06T10:49:50.083987200255-10:49:50 **** Build of project design_1_wrapper ****
-000-buildplatform.bat 49776 design_1_wrapper  
-000-XSDB Server Channel: tcfchan#32
->>>>>>> BPMCalc_functionConversion
-=======
-2023-06-07T15:35:06.95372300255-15:35:06 **** Build of project design_1_wrapper ****
-000-buildplatform.bat 55023 design_1_wrapper  
-000-XSDB Server Channel: tcfchan#21
->>>>>>> BPMCalc_functionConversion
+2023-06-14T10:53:04.838943300255-10:53:04 **** Build of project design_1_wrapper ****
+000-buildplatform.bat 50043 design_1_wrapper  
+000-XSDB Server Channel: tcfchan#9
 000-Reading the platform  : "design_1_wrapper"
 000-ERROR: [Hsi 55-1592] Current Software Design is not set
 000-ERROR: [Hsi 55-1592] Current Software Design is not set
@@ -42,13 +30,5 @@
 000-    set lastind..."
 000-    (file "C:/Xilinx/Vitis/2022.2\scripts\vitis\util\buildplatform.tcl" line 11)
 00255-
-<<<<<<< HEAD
-<<<<<<< HEAD
-10:22:37 Build Finished (took 5s.684ms)
-=======
-10:49:56 Build Finished (took 6s.717ms)
->>>>>>> BPMCalc_functionConversion
-=======
-15:35:14 Build Finished (took 7s.343ms)
->>>>>>> BPMCalc_functionConversion
+10:53:10 Build Finished (took 5s.710ms)
 
